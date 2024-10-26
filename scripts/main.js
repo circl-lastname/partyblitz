@@ -14,7 +14,7 @@ async function main() {
   rendering.scheduleRender();
   
   assets.load(() => {
-    console.log("Loaded assets");
+    server.connect();
   });
 }
 

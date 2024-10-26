@@ -16,6 +16,7 @@ assets.load = function (callback) {
       loadedImages++;
       
       if (loadedImages == images.length) {
+        console.log("Loaded assets");
         callback();
       }
     });
