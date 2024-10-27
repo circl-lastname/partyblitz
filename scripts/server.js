@@ -8,7 +8,7 @@ server.OUT_OF_DATE = 3;
 server.url = localStorage.serverURL ? localStorage.serverURL : "wss://server-eu.partyblitz.xyz:6256";
 server.socket = undefined;
 server.state = server.NOT_CONNECTED;
-server.sessionID = "";
+server.sessionID = localStorage.sessionID;
 server.reconnecting = false;
 
 server.handleHandshakePacket = function (packet) {
@@ -23,12 +23,20 @@ server.handleHandshakePacket = function (packet) {
       
       console.log(`Connected to "${packet.name}"`);
       
-      this.socket.send(JSON.stringify({
-        type: "newSession"
-      }));
+      if (this.sessionID) {
+        this.socket.send(JSON.stringify({
+          type: "resumeSession",
+          id: this.sessionID
+        }));
+      } else {
+        this.socket.send(JSON.stringify({
+          type: "newSession"
+        }));
+      }
     break;
     case "session":
       this.sessionID = packet.id;
+      localStorage.sessionID = packet.id;
       this.state = this.CONNECTED;
     break;
   }
