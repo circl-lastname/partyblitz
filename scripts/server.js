@@ -3,13 +3,13 @@ const server = {};
 server.NOT_CONNECTED = 0;
 server.HANDSHAKE = 1;
 server.CONNECTED = 2;
-server.OUT_OF_DATE = 3;
+server.DISABLED = 3;
 
 server.url = localStorage.serverURL ? localStorage.serverURL : "wss://server-eu.partyblitz.xyz:6256";
 server.socket = undefined;
 server.state = server.NOT_CONNECTED;
 server.sessionID = localStorage.sessionID;
-server.reconnecting = false;
+server.reconnectAttempts = 0;
 
 server.handleHandshakePacket = function (packet) {
   switch (packet.type) {
@@ -22,6 +22,8 @@ server.handleHandshakePacket = function (packet) {
       }
       
       console.log(`Connected to "${packet.name}"`);
+      
+      this.reconnectAttempts = 0;
       
       if (this.sessionID) {
         this.socket.send(JSON.stringify({
@@ -43,6 +45,11 @@ server.handleHandshakePacket = function (packet) {
 };
 
 server.connect = function () {
+  if (this.state == this.DISABLED) {
+    console.log("Refusing to connect to server");
+    return;
+  }
+  
   this.socket = new WebSocket(this.url);
   this.state = this.HANDSHAKE;
   
@@ -51,7 +58,24 @@ server.connect = function () {
     
     switch (this.state) {
       case this.HANDSHAKE:
-        server.handleHandshakePacket(packet);
+        this.handleHandshakePacket(packet);
+      break;
+    }
+  });
+  
+  this.socket.addEventListener("close", (e) => {
+    switch (this.state) {
+      case this.HANDSHAKE:
+      case this.CONNECTED:
+        this.socket = undefined;
+        
+        if (this.reconnectAttempts < 20) {
+          this.reconnectAttempts++;
+          this.connect();
+        } else {
+          this.state = this.DISABLED;
+          console.log(`Server reconnection failed after ${this.reconnectAttempts} attempts`)
+        }
       break;
     }
   });
