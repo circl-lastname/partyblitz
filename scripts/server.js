@@ -15,7 +15,7 @@ server.handleHandshakePacket = function (packet) {
   switch (packet.type) {
     case "handshake":
       if (packet.protocolVersion != 1) {
-        this.state = this.OUT_OF_DATE;
+        this.state = this.DISABLED;
         this.socket.close();
         this.socket = undefined;
         return;
