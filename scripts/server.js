@@ -17,7 +17,6 @@ server.handleHandshakePacket = function (packet) {
       if (packet.protocolVersion != 1) {
         this.state = this.DISABLED;
         this.socket.close();
-        this.socket = undefined;
         return;
       }
       
@@ -44,6 +43,14 @@ server.handleHandshakePacket = function (packet) {
   }
 };
 
+server.handlePacket = function (packet) {
+  switch (packet.type) {
+    case "disable":
+      this.state = this.DISABLED;
+    break;
+  }
+};
+
 server.connect = function () {
   if (this.state == this.DISABLED) {
     console.log("Refusing to connect to server");
@@ -60,23 +67,23 @@ server.connect = function () {
       case this.HANDSHAKE:
         this.handleHandshakePacket(packet);
       break;
+      case this.CONNECTED:
+        this.handlePacket(packet);
+      break;
     }
   });
   
-  this.socket.addEventListener("close", (e) => {
-    switch (this.state) {
-      case this.HANDSHAKE:
-      case this.CONNECTED:
-        this.socket = undefined;
-        
-        if (this.reconnectAttempts < 20) {
-          this.reconnectAttempts++;
-          this.connect();
-        } else {
-          this.state = this.DISABLED;
-          console.log(`Server reconnection failed after ${this.reconnectAttempts} attempts`)
-        }
-      break;
+  this.socket.addEventListener("close", () => {
+    this.socket = undefined;
+    
+    if (this.state == this.HANDSHAKE || this.state == this.CONNECTED) {
+      if (this.reconnectAttempts < 20) {
+        this.reconnectAttempts++;
+        this.connect();
+      } else {
+        this.state = this.DISABLED;
+        console.log(`Server reconnection failed after ${this.reconnectAttempts} attempts`);
+      }
     }
   });
 };
