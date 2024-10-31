@@ -7,9 +7,11 @@ server.DISABLED = 3;
 
 server.url = localStorage.serverURL ? localStorage.serverURL : "wss://server-eu.partyblitz.xyz:6256";
 server.socket = undefined;
+server.reconnectAttempts = 0;
+
 server.state = server.NOT_CONNECTED;
 server.sessionID = localStorage.sessionID;
-server.reconnectAttempts = 0;
+server.keepAliveInterval = undefined;
 
 server.handleHandshakePacket = function (packet) {
   switch (packet.type) {
@@ -60,6 +62,14 @@ server.connect = function () {
   this.socket = new WebSocket(this.url);
   this.state = this.HANDSHAKE;
   
+  this.socket.addEventListener("open", () => {
+    this.keepAliveInterval = setInterval(() => {
+      this.socket.send(JSON.stringify({
+        type: "keepAlive"
+      }));
+    }, 2*60*1000);
+  });
+  
   this.socket.addEventListener("message", (e) => {
     let packet = JSON.parse(e.data);
     
@@ -74,6 +84,7 @@ server.connect = function () {
   });
   
   this.socket.addEventListener("close", () => {
+    clearInterval(this.keepAliveInterval);
     this.socket = undefined;
     
     if (this.state == this.HANDSHAKE || this.state == this.CONNECTED) {
