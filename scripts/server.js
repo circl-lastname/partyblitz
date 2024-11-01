@@ -50,6 +50,9 @@ server.handlePacket = function (packet) {
     case "disable":
       this.state = this.DISABLED;
     break;
+    case "update":
+      doUpdate(packet);
+    break;
   }
 };
 

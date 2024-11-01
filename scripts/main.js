@@ -21,7 +21,7 @@ async function main() {
 function doUpdate(packet) {
   let init = false;
   
-  if (packet.state) {
+  if (packet.state && packet.state != state) {
     if (states[state].leave) {
       states[state].leave();
     }
@@ -42,6 +42,10 @@ function doUpdate(packet) {
   
   if (packet.playerData) {
     for (let key in packet.playerData) {
+      if (playerData[key] == packet.playerData[key]) {
+        continue;
+      }
+      
       let oldValue = playerData[key];
       playerData[key] = packet.playerData[key];
       
@@ -53,6 +57,10 @@ function doUpdate(packet) {
   
   if (packet.stateData) {
     for (let key in packet.stateData) {
+      if (stateData[key] == packet.stateData[key]) {
+        continue;
+      }
+      
       let oldValue = stateData[key];
       stateData[key] = packet.stateData[key];
       
@@ -64,6 +72,10 @@ function doUpdate(packet) {
   
   if (packet.playerStateData) {
     for (let key in packet.playerStateData) {
+      if (playerStateData[key] == packet.playerStateData[key]) {
+        continue;
+      }
+      
       let oldValue = playerStateData[key];
       playerStateData[key] = packet.playerStateData[key];
       
