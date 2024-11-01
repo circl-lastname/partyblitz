@@ -67,7 +67,7 @@ server.connect = function () {
       this.socket.send(JSON.stringify({
         type: "keepAlive"
       }));
-    }, 2*60*1000);
+    }, 60*1000);
   });
   
   this.socket.addEventListener("message", (e) => {
