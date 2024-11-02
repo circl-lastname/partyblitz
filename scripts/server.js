@@ -19,6 +19,14 @@ server.handleHandshakePacket = function (packet) {
       if (packet.protocolVersion != 1) {
         this.state = this.DISABLED;
         this.socket.close();
+        
+        doUpdate({
+          state: "errorScreen",
+          stateData: {
+            error: locale.errorOutOfDate,
+            description: locale.errorDescOutOfDate
+          }
+        });
         return;
       }
       
@@ -49,6 +57,14 @@ server.handlePacket = function (packet) {
   switch (packet.type) {
     case "disable":
       this.state = this.DISABLED;
+      
+      doUpdate({
+        state: "errorScreen",
+        stateData: {
+          error: locale.errorDisabled,
+          description: locale.errorDescDisabled
+        }
+      });
     break;
     case "update":
       doUpdate(packet);
@@ -97,6 +113,14 @@ server.connect = function () {
       } else {
         this.state = this.DISABLED;
         console.log(`Server reconnection failed after ${this.reconnectAttempts} attempts`);
+        
+        doUpdate({
+          state: "errorScreen",
+          stateData: {
+            error: locale.errorFailedReconnect,
+            description: locale.errorDescFailedReconnect
+          }
+        });
       }
     }
   });
