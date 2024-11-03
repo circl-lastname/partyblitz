@@ -6,6 +6,15 @@ states.errorScreen.stateDataHooks.error = function () {
   localStateData.descriptionY = 32 + metrics.actualBoundingBoxDescent + 32;
 };
 
+states.errorScreen.stateDataHooks.description = function () {
+  rendering.ctx.save();
+  
+  rendering.ctx.font = "37px Grandstander, sans-serif";
+  localStateData.description = gui.multiLine.create(32, localStateData.descriptionY, stateData.description);
+  
+  rendering.ctx.restore();
+};
+
 states.errorScreen.render = function () {
   rendering.ctx.save();
   
@@ -16,7 +25,7 @@ states.errorScreen.render = function () {
   rendering.ctx.fillText(stateData.error, 32, 32);
   
   rendering.ctx.font = "37px Grandstander, sans-serif";
-  rendering.ctx.fillText(stateData.description, 32, localStateData.descriptionY);
+  gui.multiLine.render(localStateData.description);
   
   rendering.ctx.restore();
 };
