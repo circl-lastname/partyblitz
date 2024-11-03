@@ -46,7 +46,7 @@ rendering.initCanvas = function () {
   
   this.ctx.scale(this.scale, this.scale);
   this.ctx.translate(this.originX, this.originY);
-  this.ctx.font = "75px Grandstander, sans-serif";
+  this.ctx.font = "72px Grandstander, sans-serif";
   this.ctx.textBaseline = "top";
 };
 
