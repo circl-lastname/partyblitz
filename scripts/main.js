@@ -19,68 +19,70 @@ async function main() {
 }
 
 function doUpdate(packet) {
-  let init = false;
-  
   if (packet.state && packet.state != state) {
     if (states[state].leave) {
       states[state].leave();
     }
     
     state = packet.state;
-    stateData = {};
-    playerStateData = {};
+    stateData = packet.stateData ? packet.stateData : {};
+    playerStateData = packet.playerStateData ? packet.playerStateData : {};
     localStateData = {};
+    
+    if (packet.playerData) {
+      for (let key in packet.playerData) {
+        playerData[key] = packet.playerData[key];
+      }
+    }
     
     if (states[state].enter) {
       states[state].enter();
     }
     
     rendering.scheduleRender();
+  } else {
+    if (packet.playerData) {
+      for (let key in packet.playerData) {
+        if (playerData[key] == packet.playerData[key]) {
+          continue;
+        }
+        
+        let oldValue = playerData[key];
+        playerData[key] = packet.playerData[key];
+        
+        if (states[state].playerDataHooks && states[state].playerDataHooks[key]) {
+          states[state].playerDataHooks[key](oldValue);
+        }
+      }
+    }
     
-    init = true;
-  }
-  
-  if (packet.playerData) {
-    for (let key in packet.playerData) {
-      if (playerData[key] == packet.playerData[key]) {
-        continue;
-      }
-      
-      let oldValue = playerData[key];
-      playerData[key] = packet.playerData[key];
-      
-      if (states[state].playerDataHooks && states[state].playerDataHooks[key]) {
-        states[state].playerDataHooks[key](oldValue, init);
+    if (packet.stateData) {
+      for (let key in packet.stateData) {
+        if (stateData[key] == packet.stateData[key]) {
+          continue;
+        }
+        
+        let oldValue = stateData[key];
+        stateData[key] = packet.stateData[key];
+        
+        if (states[state].stateDataHooks && states[state].stateDataHooks[key]) {
+          states[state].stateDataHooks[key](oldValue);
+        }
       }
     }
-  }
-  
-  if (packet.stateData) {
-    for (let key in packet.stateData) {
-      if (stateData[key] == packet.stateData[key]) {
-        continue;
-      }
-      
-      let oldValue = stateData[key];
-      stateData[key] = packet.stateData[key];
-      
-      if (states[state].stateDataHooks && states[state].stateDataHooks[key]) {
-        states[state].stateDataHooks[key](oldValue, init);
-      }
-    }
-  }
-  
-  if (packet.playerStateData) {
-    for (let key in packet.playerStateData) {
-      if (playerStateData[key] == packet.playerStateData[key]) {
-        continue;
-      }
-      
-      let oldValue = playerStateData[key];
-      playerStateData[key] = packet.playerStateData[key];
-      
-      if (states[state].playerStateDataHooks && states[state].playerStateDataHooks[key]) {
-        states[state].playerStateDataHooks[key](oldValue, init);
+    
+    if (packet.playerStateData) {
+      for (let key in packet.playerStateData) {
+        if (playerStateData[key] == packet.playerStateData[key]) {
+          continue;
+        }
+        
+        let oldValue = playerStateData[key];
+        playerStateData[key] = packet.playerStateData[key];
+        
+        if (states[state].playerStateDataHooks && states[state].playerStateDataHooks[key]) {
+          states[state].playerStateDataHooks[key](oldValue);
+        }
       }
     }
   }

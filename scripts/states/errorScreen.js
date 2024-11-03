@@ -1,16 +1,12 @@
 states.errorScreen = {};
-states.errorScreen.stateDataHooks = {};
 
-states.errorScreen.stateDataHooks.error = function () {
-  let metrics = rendering.ctx.measureText(stateData.error);
-  localStateData.descriptionY = 32 + metrics.actualBoundingBoxDescent + 32;
-};
-
-states.errorScreen.stateDataHooks.description = function () {
+states.errorScreen.enter = function () {
   rendering.ctx.save();
   
+  let metrics = rendering.ctx.measureText(stateData.error);
+  
   rendering.ctx.font = "37px Grandstander, sans-serif";
-  localStateData.description = gui.multiLine.create(32, localStateData.descriptionY, stateData.description);
+  localStateData.description = gui.multiLine.create(32, 32 + metrics.actualBoundingBoxDescent + 32, stateData.description);
   
   rendering.ctx.restore();
 };

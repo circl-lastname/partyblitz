@@ -2,11 +2,9 @@ states.mainMenu = {};
 states.mainMenu.playerDataHooks = {};
 
 states.mainMenu.enter = function () {
-  if (playerData.username) {
-    let metrics = rendering.ctx.measureText(playerData.username);
-    localStateData.usernameX = 1280/2 - metrics.width/2;
-    localStateData.usernameY = 720/2 - metrics.actualBoundingBoxDescent/2;
-  }
+  let metrics = rendering.ctx.measureText(playerData.username);
+  localStateData.usernameX = 1280/2 - metrics.width/2;
+  localStateData.usernameY = 720/2 - metrics.actualBoundingBoxDescent/2;
 };
 
 states.mainMenu.playerDataHooks.username = function () {
