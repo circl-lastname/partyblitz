@@ -6,7 +6,7 @@ states.mainMenu.enter = function () {
   localStateData.usernameX = 1280/2 - metrics.width/2;
   localStateData.usernameY = 720/2 - metrics.actualBoundingBoxDescent/2;
   
-  localStateData.githubButton = gui.roundButton.create(16, 16, 255, 255, 255, assets.images.githubLogo);
+  localStateData.githubButton = gui.roundButton.create(16, 720-16-108, 255, 255, 255, assets.images.githubLogo);
 };
 
 states.mainMenu.playerDataHooks.username = function () {

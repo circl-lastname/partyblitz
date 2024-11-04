@@ -43,7 +43,7 @@ gui.roundButton.create = function (x, y, r, g, b, image) {
   
   widget.gradient = rendering.ctx.createLinearGradient(x+54, y+9, x+54, y+99);
   widget.gradient.addColorStop(0, `rgb(${r} ${g} ${b})`);
-  widget.gradient.addColorStop(1, `rgb(${Math.max(r-64, 0)} ${Math.max(g-64, 0)} ${Math.max(b-64, 0)})`);
+  widget.gradient.addColorStop(1, `rgb(${Math.floor(r*0.7)} ${Math.floor(g*0.7)} ${Math.floor(b*0.7)})`);
   
   return widget;
 };
