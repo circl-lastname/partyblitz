@@ -72,6 +72,15 @@ server.handlePacket = function (packet) {
   }
 };
 
+server.call = function (name, argument) {
+  this.socket.send(JSON.stringify({
+    type: "call",
+    state: state,
+    name: name,
+    argument: argument
+  }));
+};
+
 server.connect = function () {
   if (this.state == this.DISABLED) {
     console.log("Refusing to connect to server");
