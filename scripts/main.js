@@ -13,6 +13,12 @@ async function main() {
   states[state].enter();
   rendering.scheduleRender();
   
+  rendering.canvas.addEventListener("mousedown", (e) => {
+    if (states[state].mouseDown) {
+      states[state].mouseDown(e.x / rendering.scale - rendering.originX, e.y / rendering.scale - rendering.originY);
+    }
+  });
+  
   assets.load(() => {
     server.connect();
   });
