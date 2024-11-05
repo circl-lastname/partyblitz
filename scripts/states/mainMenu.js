@@ -2,17 +2,16 @@ states.mainMenu = {};
 states.mainMenu.playerDataHooks = {};
 
 states.mainMenu.enter = function () {
-  let metrics = rendering.ctx.measureText(playerData.username);
-  localStateData.usernameX = 1280/2 - metrics.width/2;
-  localStateData.usernameY = 720/2 - metrics.actualBoundingBoxDescent/2;
+  localStateData.username = gui.label.create(playerData.username);
+  gui.label.setPosition(localStateData.username, gui.CENTER, gui.CENTER, 1280/2, 720/2);
   
-  localStateData.githubButton = gui.roundButton.create(16, 720-16-108, 255, 255, 255, assets.images.githubLogo);
+  localStateData.githubButton = gui.roundButton.create(255, 255, 255, assets.images.githubLogo);
+  gui.roundButton.setPosition(localStateData.githubButton, gui.LEFT, gui.BOTTOM, 16, 720-16);
 };
 
 states.mainMenu.playerDataHooks.username = function () {
-  let metrics = rendering.ctx.measureText(playerData.username);
-  localStateData.usernameX = 1280/2 - metrics.width/2;
-  localStateData.usernameY = 720/2 - metrics.actualBoundingBoxDescent/2;
+  localStateData.username = gui.label.create(playerData.username);
+  gui.label.setPosition(localStateData.username, gui.CENTER, gui.CENTER, 1280/2, 720/2);
   
   rendering.scheduleRender();
 };
@@ -22,7 +21,7 @@ states.mainMenu.render = function () {
   rendering.fillBackground();
   
   rendering.ctx.fillStyle = "#000000";
-  rendering.ctx.fillText(playerData.username, localStateData.usernameX, localStateData.usernameY);
+  gui.label.render(localStateData.username);
   
   gui.roundButton.render(localStateData.githubButton);
 };

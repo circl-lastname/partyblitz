@@ -1,51 +1,135 @@
 const gui = {};
 
-gui.multiLine = {};
+gui.TOP = 0;
+gui.LEFT = 0;
+gui.CENTER = 1;
+gui.BOTTOM = 2;
+gui.RIGHT = 2;
 
-gui.multiLine.create = function (x, y, text) {
+gui.resolvePosition = function (widget, anchorX, anchorY, x, y) {
+  let posX;
+  let posY;
+  
+  switch (anchorX) {
+    case this.LEFT:
+      posX = x;
+    break;
+    case this.CENTER:
+      posX = x - widget.width / 2;
+    break;
+    case this.RIGHT:
+      posX = x - widget.width + 1;
+    break;
+  }
+  
+  switch (anchorY) {
+    case this.TOP:
+      posY = y;
+    break;
+    case this.CENTER:
+      posY = y - widget.height / 2;
+    break;
+    case this.BOTTOM:
+      posY = y - widget.height + 1;
+    break;
+  }
+  
+  return { x: posX, y: posY };
+};
+
+gui.label = {};
+
+gui.label.create = function (text) {
   let widget = {
-    x: x,
+    text: text
+  };
+  
+  let metrics = rendering.ctx.measureText(text);
+  widget.width = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
+  widget.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
+  
+  return widget;
+};
+
+gui.label.setPosition = function (widget, anchorX, anchorY, x, y) {
+  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  widget.x = pos.x;
+  widget.y = pos.y;
+};
+
+gui.label.render = function (widget) {
+  rendering.ctx.fillText(widget.text, widget.x, widget.y);
+};
+
+gui.multiLabel = {};
+
+gui.multiLabel.create = function (text) {
+  let widget = {
+    width: 0,
+    height: 0,
     lines: []
   };
   
   let lines = text.split("\n");
   
   for (let line of lines) {
-    let metrics = rendering.ctx.measureText(line);
     widget.lines.push({
-      y: y,
-      text: line
+      text: line,
+      yOffset: widget.height
     });
-    y += metrics.fontBoundingBoxDescent + 5;
+    
+    widget.height += 5;
+    
+    let metrics = rendering.ctx.measureText(line);
+    
+    let width = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
+    if (width > widget.width) {
+      widget.width = width;
+    }
+    
+    widget.height += metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
   }
   
   return widget;
 };
 
-gui.multiLine.render = function (widget) {
+gui.multiLabel.setPosition = function (widget, anchorX, anchorY, x, y) {
+  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  widget.x = pos.x;
+  widget.y = pos.y;
+};
+
+gui.multiLabel.render = function (widget) {
   for (let line of widget.lines) {
-    rendering.ctx.fillText(line.text, widget.x, line.y);
+    rendering.ctx.fillText(line.text, widget.x, widget.y + line.yOffset);
   }
 };
 
 gui.roundButton = {};
 
-gui.roundButton.create = function (x, y, r, g, b, image) {
+gui.roundButton.create = function (r, g, b, image) {
   let widget = {
-    arcX: x+54,
-    arcY: y+54,
-    imageX: x+18,
-    imageY: y+18,
-    image: image,
     width: 108,
     height: 108,
+    colorTop: `rgb(${r} ${g} ${b})`,
+    colorBottom: `rgb(${Math.floor(r*0.7)} ${Math.floor(g*0.7)} ${Math.floor(b*0.7)})`,
+    image: image
   };
   
-  widget.gradient = rendering.ctx.createLinearGradient(x+54, y+9, x+54, y+99);
-  widget.gradient.addColorStop(0, `rgb(${r} ${g} ${b})`);
-  widget.gradient.addColorStop(1, `rgb(${Math.floor(r*0.7)} ${Math.floor(g*0.7)} ${Math.floor(b*0.7)})`);
-  
   return widget;
+};
+
+gui.roundButton.setPosition = function (widget, anchorX, anchorY, x, y) {
+  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  
+  widget.arcX = pos.x + 54;
+  widget.arcY = pos.y + 54;
+  widget.imageX = pos.x + 18;
+  widget.imageY = pos.y + 18;
+  
+  widget.gradient = rendering.ctx.createLinearGradient(pos.x, pos.y + 9, pos.x, pos.y + 99);
+  widget.gradient.addColorStop(0, widget.colorTop);
+  widget.gradient.addColorStop(1, widget.colorBottom);
 };
 
 gui.roundButton.render = function (widget) {
@@ -56,7 +140,7 @@ gui.roundButton.render = function (widget) {
   rendering.ctx.closePath();
   
   rendering.ctx.lineWidth = 18;
-  rendering.ctx.strokeStyle = "#404040";
+  rendering.ctx.strokeStyle = "#000000";
   rendering.ctx.stroke();
   
   rendering.ctx.fillStyle = widget.gradient;

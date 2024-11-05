@@ -3,10 +3,12 @@ states.errorScreen = {};
 states.errorScreen.enter = function () {
   rendering.ctx.save();
   
-  let metrics = rendering.ctx.measureText(stateData.error);
+  localStateData.error = gui.label.create(stateData.error);
+  gui.label.setPosition(localStateData.error, gui.LEFT, gui.TOP, 16, 32);
   
   rendering.ctx.font = "36px Grandstander, sans-serif";
-  localStateData.description = gui.multiLine.create(16, 32 + metrics.actualBoundingBoxDescent + 32, stateData.description);
+  localStateData.description = gui.multiLabel.create(stateData.description);
+  gui.multiLabel.setPosition(localStateData.description, gui.LEFT, gui.TOP, 16, 32 + localStateData.error.height + 16);
   
   rendering.ctx.restore();
 };
@@ -18,10 +20,10 @@ states.errorScreen.render = function () {
   rendering.fillBackground();
   
   rendering.ctx.fillStyle = "#000000";
-  rendering.ctx.fillText(stateData.error, 16, 32);
+  gui.label.render(localStateData.error);
   
   rendering.ctx.font = "36px Grandstander, sans-serif";
-  gui.multiLine.render(localStateData.description);
+  gui.multiLabel.render(localStateData.description);
   
   rendering.ctx.restore();
 };
