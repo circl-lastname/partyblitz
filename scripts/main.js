@@ -15,7 +15,8 @@ async function main() {
   
   rendering.canvas.addEventListener("mousedown", (e) => {
     if (states[state].mouseDown) {
-      states[state].mouseDown(e.x / rendering.scale - rendering.originX, e.y / rendering.scale - rendering.originY);
+      states[state].mouseDown(e.x * window.devicePixelRatio / rendering.scale - rendering.originX,
+                              e.y * window.devicePixelRatio / rendering.scale - rendering.originY);
     }
   });
   
