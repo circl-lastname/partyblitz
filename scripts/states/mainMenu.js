@@ -5,7 +5,10 @@ states.mainMenu.enter = function () {
   localStateData.username = gui.label.create(playerData.username);
   gui.label.setPosition(localStateData.username, gui.CENTER, gui.CENTER, 1280/2, 720/2);
   
-  localStateData.githubButton = gui.roundButton.create(255, 255, 255, assets.images.githubLogo);
+  localStateData.githubButton = gui.roundButton.create(255, 255, 255, assets.images.githubLogo, () => {
+    window.open("https://github.com/circl-lastname/partyblitz", "_blank");
+  });
+  
   gui.roundButton.setPosition(localStateData.githubButton, gui.LEFT, gui.BOTTOM, 16, 720-16);
 };
 
@@ -15,6 +18,10 @@ states.mainMenu.playerDataHooks.username = function () {
   
   rendering.scheduleRender();
 };
+
+states.mainMenu.mouseDown = function (x, y) {
+  gui.roundButton.hitTest(localStateData.githubButton, x, y);
+}
 
 states.mainMenu.render = function () {
   rendering.ctx.fillStyle = "#ffffff";

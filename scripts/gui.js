@@ -107,13 +107,14 @@ gui.multiLabel.render = function (widget) {
 
 gui.roundButton = {};
 
-gui.roundButton.create = function (r, g, b, image) {
+gui.roundButton.create = function (r, g, b, image, callback) {
   let widget = {
     width: 108,
     height: 108,
     colorTop: `rgb(${r} ${g} ${b})`,
     colorBottom: `rgb(${Math.floor(r*0.7)} ${Math.floor(g*0.7)} ${Math.floor(b*0.7)})`,
-    image: image
+    image: image,
+    callback: callback
   };
   
   return widget;
@@ -149,4 +150,13 @@ gui.roundButton.render = function (widget) {
   rendering.ctx.drawImage(widget.image, widget.imageX, widget.imageY, 72, 72);
   
   rendering.ctx.restore();
+};
+
+gui.roundButton.hitTest = function (widget, x, y) {
+  if (Math.sqrt((x - widget.arcX)**2 + (y - widget.arcY)**2) <= 45) {
+    widget.callback();
+    return true;
+  }
+  
+  return false;
 };
