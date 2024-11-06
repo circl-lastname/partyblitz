@@ -10,6 +10,12 @@ states.mainMenu.enter = function () {
   });
   
   gui.roundButton.setPosition(localStateData.githubButton, gui.LEFT, gui.BOTTOM, 16, 720-16);
+  
+  localStateData.fullscreenButton = gui.roundButton.create(255, 160, 0, assets.images.fullscreen, () => {
+    rendering.canvas.requestFullscreen();
+  });
+  
+  gui.roundButton.setPosition(localStateData.fullscreenButton, gui.RIGHT, gui.TOP, 1280-16, 16);
 };
 
 states.mainMenu.playerDataHooks.username = function () {
@@ -20,8 +26,9 @@ states.mainMenu.playerDataHooks.username = function () {
 };
 
 states.mainMenu.mouseDown = function (x, y) {
-  gui.roundButton.hitTest(localStateData.githubButton, x, y);
-}
+  if (!gui.roundButton.hitTest(localStateData.githubButton, x, y))
+    gui.roundButton.hitTest(localStateData.fullscreenButton, x, y)
+};
 
 states.mainMenu.render = function () {
   rendering.ctx.fillStyle = "#ffffff";
@@ -31,4 +38,5 @@ states.mainMenu.render = function () {
   gui.label.render(localStateData.username);
   
   gui.roundButton.render(localStateData.githubButton);
+  gui.roundButton.render(localStateData.fullscreenButton);
 };
