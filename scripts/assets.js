@@ -4,8 +4,9 @@ assets.images = {};
 
 assets.load = function (callback) {
   const images = [
-    "githubLogo",
-    "fullscreen"
+    "edit",
+    "fullscreen",
+    "githubLogo"
   ];
   
   let loadedImages = 0;
