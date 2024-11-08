@@ -45,7 +45,7 @@ gui.label.create = function (text) {
   };
   
   let metrics = rendering.ctx.measureText(text);
-  widget.width = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
+  widget.width = metrics.actualBoundingBoxRight;
   widget.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent;
   
   return widget;
@@ -82,7 +82,7 @@ gui.multiLabel.create = function (text) {
     
     let metrics = rendering.ctx.measureText(line);
     
-    let width = metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight;
+    let width = metrics.actualBoundingBoxRight;
     if (width > widget.width) {
       widget.width = width;
     }
