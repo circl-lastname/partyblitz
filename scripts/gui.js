@@ -6,7 +6,7 @@ gui.CENTER = 1;
 gui.BOTTOM = 2;
 gui.RIGHT = 2;
 
-gui.resolvePosition = function (widget, anchorX, anchorY, x, y) {
+gui.resolvePosition = function (width, height, anchorX, anchorY, x, y) {
   let posX;
   let posY;
   
@@ -15,10 +15,10 @@ gui.resolvePosition = function (widget, anchorX, anchorY, x, y) {
       posX = x;
     break;
     case this.CENTER:
-      posX = x - widget.width / 2;
+      posX = x - width / 2;
     break;
     case this.RIGHT:
-      posX = x - widget.width + 1;
+      posX = x - width + 1;
     break;
   }
   
@@ -27,10 +27,10 @@ gui.resolvePosition = function (widget, anchorX, anchorY, x, y) {
       posY = y;
     break;
     case this.CENTER:
-      posY = y - widget.height / 2;
+      posY = y - height / 2;
     break;
     case this.BOTTOM:
-      posY = y - widget.height + 1;
+      posY = y - height + 1;
     break;
   }
   
@@ -52,7 +52,7 @@ gui.label.create = function (text) {
 };
 
 gui.label.setPosition = function (widget, anchorX, anchorY, x, y) {
-  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  let pos = gui.resolvePosition(widget.width, widget.height, anchorX, anchorY, x, y);
   widget.x = pos.x;
   widget.y = pos.y;
 };
@@ -94,7 +94,7 @@ gui.multiLabel.create = function (text) {
 };
 
 gui.multiLabel.setPosition = function (widget, anchorX, anchorY, x, y) {
-  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  let pos = gui.resolvePosition(widget.width, widget.height, anchorX, anchorY, x, y);
   widget.x = pos.x;
   widget.y = pos.y;
 };
@@ -121,7 +121,7 @@ gui.roundButton.create = function (r, g, b, image, callback) {
 };
 
 gui.roundButton.setPosition = function (widget, anchorX, anchorY, x, y) {
-  let pos = gui.resolvePosition(widget, anchorX, anchorY, x, y);
+  let pos = gui.resolvePosition(widget.width, widget.height, anchorX, anchorY, x, y);
   
   widget.arcX = pos.x + 54;
   widget.arcY = pos.y + 54;
