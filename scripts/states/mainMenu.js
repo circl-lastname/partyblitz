@@ -2,10 +2,6 @@ states.mainMenu = {};
 states.mainMenu.playerDataHooks = {};
 
 states.mainMenu.enter = function () {
-  if (localStorage.username && playerData.username != localStorage.username) {
-    server.call("setUsername", localStorage.username);
-  }
-  
   rendering.ctx.save();
   
   let y = 32;

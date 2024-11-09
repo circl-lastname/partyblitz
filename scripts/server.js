@@ -15,7 +15,7 @@ server.keepAliveInterval = undefined;
 
 server.handleHandshakePacket = function (packet) {
   switch (packet.type) {
-    case "handshake":
+    case "handshake": {
       if (packet.protocolVersion != 1) {
         this.state = this.DISABLED;
         this.socket.close();
@@ -34,17 +34,25 @@ server.handleHandshakePacket = function (packet) {
       
       this.reconnectAttempts = 0;
       
+      let response;
+      
       if (this.sessionID) {
-        this.socket.send(JSON.stringify({
+        response = {
           type: "resumeSession",
           id: this.sessionID
-        }));
+        };
       } else {
-        this.socket.send(JSON.stringify({
+        response = {
           type: "newSession"
-        }));
+        };
       }
-    break;
+      
+      if (localStorage.username) {
+        response.username = localStorage.username;
+      }
+      
+      this.socket.send(JSON.stringify(response));
+    } break;
     case "session":
       this.sessionID = packet.id;
       localStorage.sessionID = packet.id;
