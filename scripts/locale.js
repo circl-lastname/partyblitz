@@ -7,7 +7,8 @@ langs.english = {
   errorDisabled: "Opened in another tab",
   errorDescDisabled: "The game has been opened in another tab, please continue playing\nthere",
   errorFailedReconnect: "Connection lost",
-  errorDescFailedReconnect: "The client failed to connect to the server after multiple attempts,\nplease try again later"
+  errorDescFailedReconnect: "The client failed to connect to the server after multiple attempts,\nplease try again later",
+  play: "Play"
 };
 
 langs.polish = {
@@ -17,7 +18,8 @@ langs.polish = {
   errorDisabled: "Otwarto w innej zakładce",
   errorDescDisabled: "Gra została otworzona w innej zakładce, prosimy tam kontynuować\nrozgrywkę",
   errorFailedReconnect: "Stracono połączenie",
-  errorDescFailedReconnect: "Klient nie mógł połączyć się z serwerem po wielu próbach, prosimy\nspróbować później"
+  errorDescFailedReconnect: "Klient nie mógł połączyć się z serwerem po wielu próbach, prosimy\nspróbować później",
+  play: "Graj"
 };
 
 var locale = {};

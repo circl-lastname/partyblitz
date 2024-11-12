@@ -9,6 +9,7 @@ states.mainMenu.enter = function () {
   rendering.ctx.font = "144px Grandstander, sans-serif";
   localStateData.partyblitz = gui.label.create("Partyblitz");
   gui.label.setPosition(localStateData.partyblitz, gui.CENTER, gui.TOP, 1280/2, y);
+  
   y += localStateData.partyblitz.height + 32;
   
   rendering.ctx.font = "72px Grandstander, sans-serif";
@@ -33,6 +34,11 @@ states.mainMenu.enter = function () {
   
   y += localStateData.usernameButton.height + 16;
   
+  localStateData.playButton = gui.button.create(0, 160, 0, locale.play, () => {
+    console.log("pressed");
+  });
+  gui.button.setPosition(localStateData.playButton, gui.CENTER, gui.TOP, 1280/2, y);
+  
   
   localStateData.githubButton = gui.roundButton.create(255, 255, 255, assets.images.githubLogo, () => {
     window.open("https://github.com/circl-lastname/partyblitz", "_blank");
@@ -50,7 +56,6 @@ states.mainMenu.enter = function () {
 states.mainMenu.playerDataHooks.username = function () {
   rendering.ctx.save();
   
-  rendering.ctx.font = "72px Grandstander, sans-serif";
   localStateData.username = gui.label.create(playerData.username);
   
   let pos = gui.resolvePosition(localStateData.username.width + 16 + localStateData.usernameButton.width,
@@ -67,6 +72,7 @@ states.mainMenu.playerDataHooks.username = function () {
 
 states.mainMenu.mouseDown = function (x, y) {
   if (!gui.roundButton.hitTest(localStateData.usernameButton, x, y))
+  if (!gui.button.hitTest(localStateData.playButton, x, y))
   if (!gui.roundButton.hitTest(localStateData.githubButton, x, y))
     gui.roundButton.hitTest(localStateData.fullscreenButton, x, y)
 };
@@ -85,6 +91,8 @@ states.mainMenu.render = function () {
   gui.label.render(localStateData.username);
   
   gui.roundButton.render(localStateData.usernameButton);
+  
+  gui.button.render(localStateData.playButton);
   
   gui.roundButton.render(localStateData.githubButton);
   gui.roundButton.render(localStateData.fullscreenButton);

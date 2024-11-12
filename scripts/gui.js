@@ -160,3 +160,59 @@ gui.roundButton.hitTest = function (widget, x, y) {
   
   return false;
 };
+
+gui.button = {};
+
+gui.button.create = function (r, g, b, text, callback) {
+  let widget = {
+    colorTop: `rgb(${r} ${g} ${b})`,
+    colorBottom: `rgb(${Math.floor(r*0.7)} ${Math.floor(g*0.7)} ${Math.floor(b*0.7)})`,
+    text: text,
+    callback: callback
+  };
+  
+  let metrics = rendering.ctx.measureText(text);
+  widget.width = metrics.actualBoundingBoxRight + 36;
+  widget.height = metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent + 36;
+  
+  return widget;
+};
+
+gui.button.setPosition = function (widget, anchorX, anchorY, x, y) {
+  let pos = gui.resolvePosition(widget.width, widget.height, anchorX, anchorY, x, y);
+  
+  widget.textX = pos.x + 18;
+  widget.textY = pos.y + 18;
+  
+  widget.path = new Path2D();
+  widget.path.roundRect(pos.x + 9, pos.y + 9, widget.width - 18, widget.height - 18, (widget.height - 18) / 4);
+  
+  widget.gradient = rendering.ctx.createLinearGradient(pos.x, pos.y + 9, pos.x, pos.y + 99);
+  widget.gradient.addColorStop(0, widget.colorTop);
+  widget.gradient.addColorStop(1, widget.colorBottom);
+};
+
+gui.button.render = function (widget) {
+  rendering.ctx.save();
+  
+  rendering.ctx.lineWidth = 18;
+  rendering.ctx.strokeStyle = "#000000";
+  rendering.ctx.stroke(widget.path);
+  
+  rendering.ctx.fillStyle = widget.gradient;
+  rendering.ctx.fill(widget.path);
+  
+  rendering.ctx.fillStyle = "#ffffff";
+  rendering.ctx.fillText(widget.text, widget.textX, widget.textY);
+  
+  rendering.ctx.restore();
+};
+
+gui.button.hitTest = function (widget, x, y) {
+  if (rendering.ctx.isPointInPath(widget.path, x, y)) {
+    widget.callback();
+    return true;
+  }
+  
+  return false;
+};
