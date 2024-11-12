@@ -123,10 +123,12 @@ gui.roundButton.create = function (r, g, b, image, callback) {
 gui.roundButton.setPosition = function (widget, anchorX, anchorY, x, y) {
   let pos = gui.resolvePosition(widget.width, widget.height, anchorX, anchorY, x, y);
   
-  widget.arcX = pos.x + 54;
-  widget.arcY = pos.y + 54;
   widget.imageX = pos.x + 18;
   widget.imageY = pos.y + 18;
+  
+  widget.path = new Path2D();
+  widget.path.arc(pos.x + 54, pos.y + 54, 45, 0, 2*Math.PI);
+  widget.path.closePath();
   
   widget.gradient = rendering.ctx.createLinearGradient(pos.x, pos.y + 9, pos.x, pos.y + 99);
   widget.gradient.addColorStop(0, widget.colorTop);
@@ -136,16 +138,12 @@ gui.roundButton.setPosition = function (widget, anchorX, anchorY, x, y) {
 gui.roundButton.render = function (widget) {
   rendering.ctx.save();
   
-  rendering.ctx.beginPath();
-  rendering.ctx.arc(widget.arcX, widget.arcY, 45, 0, 2*Math.PI);
-  rendering.ctx.closePath();
-  
   rendering.ctx.lineWidth = 18;
   rendering.ctx.strokeStyle = "#000000";
-  rendering.ctx.stroke();
+  rendering.ctx.stroke(widget.path);
   
   rendering.ctx.fillStyle = widget.gradient;
-  rendering.ctx.fill();
+  rendering.ctx.fill(widget.path);
   
   rendering.ctx.drawImage(widget.image, widget.imageX, widget.imageY, 72, 72);
   
@@ -153,7 +151,7 @@ gui.roundButton.render = function (widget) {
 };
 
 gui.roundButton.hitTest = function (widget, x, y) {
-  if (Math.sqrt((x - widget.arcX)**2 + (y - widget.arcY)**2) <= 45) {
+  if (rendering.ctx.isPointInPath(widget.path, x, y)) {
     widget.callback();
     return true;
   }
@@ -187,7 +185,7 @@ gui.button.setPosition = function (widget, anchorX, anchorY, x, y) {
   widget.path = new Path2D();
   widget.path.roundRect(pos.x + 9, pos.y + 9, widget.width - 18, widget.height - 18, (widget.height - 18) / 4);
   
-  widget.gradient = rendering.ctx.createLinearGradient(pos.x, pos.y + 9, pos.x, pos.y + 99);
+  widget.gradient = rendering.ctx.createLinearGradient(pos.x, pos.y + 9, pos.x, pos.y + widget.height - 9);
   widget.gradient.addColorStop(0, widget.colorTop);
   widget.gradient.addColorStop(1, widget.colorBottom);
 };
