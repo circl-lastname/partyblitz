@@ -16,7 +16,7 @@ states.mainMenu.enter = function () {
   localStateData.username = gui.label.create(playerData.username);
   
   localStateData.usernameButton = gui.roundButton.create(255, 160, 0, assets.images.edit, () => {
-    let username = prompt("Enter new username");
+    let username = prompt(locale.changeUsername);
     
     if (username) {
       localStorage.username = username;
@@ -89,12 +89,12 @@ states.mainMenu.render = function () {
   
   rendering.ctx.font = "72px Grandstander, sans-serif";
   gui.label.render(localStateData.username);
-  
   gui.roundButton.render(localStateData.usernameButton);
   
   gui.button.render(localStateData.playButton);
   
   gui.roundButton.render(localStateData.githubButton);
+  
   gui.roundButton.render(localStateData.fullscreenButton);
   
   rendering.ctx.restore();
