@@ -19,9 +19,9 @@ async function main() {
     }
   });
   
-  assets.load(() => {
-    server.connect();
-  });
+  await assets.load();
+  
+  server.connect();
 }
 
 function doUpdate(packet) {
