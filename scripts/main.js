@@ -1,8 +1,11 @@
 var playerData = {};
+
 var state = "loadingScreen";
 var stateData = {};
 var playerStateData = {};
 var localStateData = {};
+
+var overlay = undefined;
 
 async function main() {
   let font = new FontFace("Grandstander", "url(assets/fonts/Grandstander.ttf)");
@@ -14,14 +17,46 @@ async function main() {
   rendering.scheduleRender();
   
   rendering.canvas.addEventListener("mousedown", (e) => {
-    if (states[state].mouseDown) {
-      states[state].mouseDown(e.x * window.devicePixelRatio, e.y * window.devicePixelRatio);
+    let x = e.x * window.devicePixelRatio;
+    let y = e.y * window.devicePixelRatio;
+    
+    if (!overlay) {
+      if (states[state].mouseDown) {
+        states[state].mouseDown(x, y);
+      }
+    } else {
+      if (overlays[overlay].mouseDown) {
+        overlays[overlay].mouseDown(x, y);
+      }
     }
   });
   
   await assets.load();
   
   server.connect();
+}
+
+function setOverlay(name) {
+  if (overlay && overlays[overlay].leave) {
+    overlays[overlay].leave();
+  }
+  
+  overlay = name;
+  
+  overlays[overlay].enter();
+  rendering.scheduleRender();
+}
+
+function clearOverlay() {
+  if (overlay) {
+    if (overlays[overlay].leave) {
+      overlays[overlay].leave();
+    }
+    
+    overlay = undefined;
+    
+    rendering.scheduleRender();
+  }
 }
 
 function doUpdate(packet) {
@@ -41,10 +76,7 @@ function doUpdate(packet) {
       }
     }
     
-    if (states[state].enter) {
-      states[state].enter();
-    }
-    
+    states[state].enter();
     rendering.scheduleRender();
   } else {
     if (packet.playerData) {

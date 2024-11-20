@@ -16,6 +16,7 @@ states.mainMenu.enter = function () {
   localStateData.username = gui.label.create(playerData.username);
   
   localStateData.usernameButton = gui.roundButton.create(255, 160, 0, assets.images.edit, () => {
+    // TODO: have a cool embedded input element for this
     let username = prompt(locale.changeUsername);
     
     if (username) {

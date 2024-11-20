@@ -60,7 +60,15 @@ rendering.scheduleRender = function () {
     
     requestAnimationFrame(() => {
       this.renderScheduled = false;
+      
       states[state].render();
+      
+      if (overlay) {
+        this.ctx.fillStyle = "#00000080";
+        this.fillBackground();
+        
+        overlays[overlay].render();
+      }
     });
   }
 };
