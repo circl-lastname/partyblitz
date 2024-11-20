@@ -34,6 +34,10 @@ server.handleHandshakePacket = function (packet) {
       
       this.reconnectAttempts = 0;
       
+      if (overlay == "reconnecting") {
+        clearOverlay();
+      }
+      
       let response;
       
       if (this.sessionID) {
@@ -125,11 +129,17 @@ server.connect = function () {
     
     if (this.state == this.HANDSHAKE || this.state == this.CONNECTED) {
       if (this.reconnectAttempts < 20) {
+        if (this.state == this.CONNECTED && overlay != "reconnecting") {
+          setOverlay("reconnecting");
+        }
+        
         this.reconnectAttempts++;
         this.connect();
       } else {
         this.state = this.DISABLED;
         console.log(`Server reconnection failed after ${this.reconnectAttempts} attempts`);
+        
+        clearOverlay();
         
         doUpdate({
           state: "errorScreen",
