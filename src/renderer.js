@@ -40,7 +40,7 @@ export class Renderer {
   
   #handleFrame(t) {
     if (!this.frameCallback) {
-      this.ctx.fillStyle = "#ff8000";
+      this.ctx.fillStyle = "#808080";
       this.ctx.fillRect(0, 0, this.width, this.height);
     } else {
       this.frameCallback(t);

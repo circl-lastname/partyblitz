@@ -1,4 +1,4 @@
-import { Renderer } from "/Renderer.js";
+import { Renderer } from "/renderer.js";
 
 console.log("Partyblitz");
 

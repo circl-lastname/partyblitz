@@ -2,6 +2,14 @@ body {
   margin: 0;
 }
 
-canvas {
-  display: block;
+canvas, .ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.ui {
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
 }
